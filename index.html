@@ -1,499 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>QuizFunnel — Test Your Knowledge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQ Challenge</title>
+
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --ink: #0e0e0e;
-  --ink-muted: #5a5a5a;
-  --ink-ghost: #9a9a9a;
-  --surface: #fafaf7;
-  --surface-2: #f2f2ed;
-  --surface-3: #e8e7e0;
-  --accent: #d95f2b;
-  --accent-light: #f5e8e0;
-  --accent-dark: #a8421a;
-  --correct: #2d7a4f;
-  --correct-bg: #edf7f1;
-  --correct-border: #a3d9bc;
-  --wrong: #c0392b;
-  --wrong-bg: #fef0ee;
-  --wrong-border: #f5b7b1;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --radius-xl: 32px;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --tr: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html, body {
-  height: 100%;
-  font-family: var(--font-body);
-  background: var(--surface);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-}
-
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
+  font-family: Arial, sans-serif;
+  background:#fafaf7;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
-
-.screen { display: none; width: 100%; max-width: 520px; animation: fadeUp 0.4s ease both; }
-.screen.active { display: block; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-
-.logo {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.25rem;
-  letter-spacing: -0.02em;
-  text-align: center;
-  margin-bottom: 28px;
-  color: var(--ink);
-}
-.logo span { color: var(--accent); }
-
 .card {
-  background: #fff;
-  border: 1px solid var(--surface-3);
-  border-radius: var(--radius-xl);
-  padding: 40px 36px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+  background:#fff;
+  padding:25px;
+  border-radius:15px;
+  max-width:500px;
+  width:100%;
+  text-align:center;
 }
-
-/* START */
-.start-icon {
-  width: 64px; height: 64px;
-  background: var(--accent-light);
-  border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 24px;
+button {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
 }
-.start-icon svg { width: 32px; height: 32px; color: var(--accent); }
-.start-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.8rem;
-  letter-spacing: -0.03em;
-  text-align: center;
-  margin-bottom: 10px;
-  line-height: 1.15;
-}
-.start-sub { font-size: 0.9rem; color: var(--ink-muted); text-align: center; line-height: 1.65; margin-bottom: 28px; }
-.start-meta { display: flex; justify-content: center; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
-.meta-pill {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--surface-2); padding: 7px 14px;
-  border-radius: 100px; font-size: 0.8rem; font-weight: 500; color: var(--ink-muted);
-}
-.meta-pill svg { width: 14px; height: 14px; color: var(--accent); }
-
-
-.btn {
-  width: 100%; padding: 14px; border: none;
-  border-radius: var(--radius-sm); font-family: var(--font-body);
-  font-size: 0.95rem; font-weight: 500; cursor: pointer;
-  transition: all var(--tr); display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-accent { background: var(--accent); color: #fff; }
-.btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); }
-
-/* LOADING */
-.loading-wrap { text-align: center; padding: 60px 20px; }
-.spinner {
-  width: 44px; height: 44px;
-  border: 3px solid var(--surface-3); border-top-color: var(--accent);
-  border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--ink); margin-bottom: 6px; }
-.loading-sub { font-size: 0.85rem; color: var(--ink-ghost); }
-
-/* QUIZ */
-.quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.q-counter { font-size: 0.8rem; font-weight: 500; color: var(--ink-muted); }
-.q-counter strong { color: var(--ink); font-weight: 700; }
-.timer-wrap {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--surface-2); padding: 6px 14px; border-radius: 100px;
-  font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--ink);
-  transition: color var(--tr), background var(--tr);
-}
-.timer-wrap svg { width: 14px; height: 14px; }
-.timer-wrap.urgent { background: var(--wrong-bg); color: var(--wrong); }
-.progress-bar { height: 5px; background: var(--surface-3); border-radius: 100px; margin-bottom: 24px; overflow: hidden; }
-.progress-fill { height: 100%; background: var(--accent); border-radius: 100px; transition: width 0.4s ease; }
-.q-category { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-.q-text { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; line-height: 1.5; color: var(--ink); margin-bottom: 22px; }
-.options { display: flex; flex-direction: column; gap: 10px; }
-.opt-btn {
-  width: 100%; padding: 13px 18px;
-  background: var(--surface); border: 1px solid var(--surface-3);
-  border-radius: var(--radius-md); font-family: var(--font-body);
-  font-size: 0.9rem; font-weight: 400; color: var(--ink);
-  cursor: pointer; text-align: left; transition: all var(--tr); line-height: 1.4;
-}
-.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-light); }
-.opt-btn.correct { background: var(--correct-bg); border-color: var(--correct-border); color: var(--correct); font-weight: 500; }
-.opt-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); color: var(--wrong); font-weight: 500; }
-.opt-btn:disabled { cursor: default; }
-.q-nav { display: flex; justify-content: space-between; margin-top: 22px; gap: 10px; }
-.btn-nav {
-  flex: 1; padding: 11px; border: 1px solid var(--surface-3); border-radius: var(--radius-sm);
-  background: transparent; font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
-  color: var(--ink-muted); cursor: pointer; transition: all var(--tr);
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.btn-nav:hover { border-color: var(--ink-muted); color: var(--ink); background: var(--surface-2); }
-.btn-nav.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-.btn-nav.primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-.dot-nav { display: flex; justify-content: center; gap: 6px; margin-top: 18px; flex-wrap: wrap; }
-.dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--surface-3); border: 1px solid transparent;
-  cursor: pointer; transition: all var(--tr); flex-shrink: 0;
-}
-.dot.answered { background: var(--accent); }
-.dot.current { border-color: var(--accent); background: var(--accent-light); }
-
-/* RESULT */
-.result-header { text-align: center; margin-bottom: 24px; }
-.result-emoji { font-size: 2.8rem; margin-bottom: 10px; display: block; }
-.result-title { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 5px; }
-.result-sub { font-size: 0.82rem; color: var(--ink-ghost); }
-.score-ring-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
-.score-ring { width: 120px; height: 120px; position: relative; }
-.score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-.score-ring circle { fill: none; stroke-width: 10; }
-.score-ring .track { stroke: var(--surface-3); }
-.score-ring .fill { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1); }
-.score-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.score-pct { font-family: var(--font-display); font-weight: 800; font-size: 1.7rem; letter-spacing: -0.03em; color: var(--ink); }
-.score-pct-lbl { font-size: 0.68rem; color: var(--ink-ghost); }
-.result-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 22px; }
-.stat-box { background: var(--surface-2); border-radius: var(--radius-md); padding: 14px 10px; text-align: center; }
-.stat-box-num { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; margin-bottom: 3px; }
-.stat-box-num.c { color: var(--correct); }
-.stat-box-num.w { color: var(--wrong); }
-.stat-box-num.s { color: var(--accent); }
-.stat-box-lbl { font-size: 0.72rem; color: var(--ink-ghost); }
-.answers-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; max-height: 320px; overflow-y: auto; }
-.answer-item { padding: 12px 14px; border-radius: var(--radius-md); border: 1px solid var(--surface-3); background: var(--surface); }
-.answer-item.correct-item { background: var(--correct-bg); border-color: var(--correct-border); }
-.answer-item.wrong-item { background: var(--wrong-bg); border-color: var(--wrong-border); }
-.answer-item.skip-item { background: var(--surface-2); }
-.answer-q { font-size: 0.8rem; font-weight: 500; color: var(--ink); margin-bottom: 5px; line-height: 1.4; }
-.answer-detail { font-size: 0.76rem; color: var(--ink-muted); }
-.answer-correct-lbl { color: var(--correct); font-weight: 500; }
-.answer-wrong-lbl { color: var(--wrong); font-weight: 500; }
-
-@media (max-width: 560px) {
-  body { justify-content: flex-start; padding-top: 36px; }
-  .card { padding: 28px 20px; border-radius: var(--radius-lg); }
-  .start-title { font-size: 1.5rem; }
-  .result-stats { grid-template-columns: 1fr 1fr; }
-}
+.btn {background:#d95f2b;color:#fff;}
+.share {background:#1877f2;color:#fff;}
 </style>
 </head>
+
 <body>
 
-<!-- START -->
-<div class="screen active" id="screen-start">
-  <div class="logo">Quiz<span>Funnel</span></div>
-  <div class="card">
-    <div class="start-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    </div>
-    <h1 class="start-title">Think fast.<br>Prove it.</h1>
-    <p class="start-sub">15 trivia questions. One timer. Can you beat the clock?</p>
-    <div class="start-meta">
-      <div class="meta-pill">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        15 Questions
-      </div>
-      <div class="meta-pill">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        10 Minutes
-      </div>
-      <div class="meta-pill">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-        Live Q's
-      </div>
-    </div>
-    <button class="btn btn-accent" id="start-btn">
-      Start Quiz
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </button>
-  </div>
-</div>
+<div class="card">
+  <h2 id="title">IQ Challenge</h2>
+  <p id="question">Loading...</p>
 
-<!-- LOADING -->
-<div class="screen" id="screen-loading">
-  <div class="logo">Quiz<span>Funnel</span></div>
-  <div class="card">
-    <div class="loading-wrap">
-      <div class="spinner"></div>
-      <div class="loading-text">Loading your questions…</div>
-      <div class="loading-sub">Fetching fresh trivia from the internet</div>
-    </div>
-  </div>
-</div>
+  <div id="options"></div>
 
-<!-- QUIZ -->
-<div class="screen" id="screen-quiz">
-  <div class="logo">Quiz<span>Funnel</span></div>
-  <div class="card">
-    <div class="quiz-header">
-      <div class="q-counter">Question <strong id="q-current">1</strong> of <strong>15</strong></div>
-      <div class="timer-wrap" id="timer-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        <span id="timer-display">10:00</span>
-      </div>
-    </div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:6.67%"></div></div>
-    <div class="q-category" id="q-category">General Knowledge</div>
-    <div class="q-text" id="q-text">Loading…</div>
-    <div class="options" id="options"></div>
-    <div class="q-nav">
-      <button class="btn-nav" id="btn-prev">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Prev
-      </button>
-      <button class="btn-nav primary" id="btn-next">
-        Next
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-    <div class="dot-nav" id="dot-nav"></div>
-  </div>
-</div>
+  <button class="btn" id="start">Start Quiz</button>
 
-<!-- RESULT -->
-<div class="screen" id="screen-result">
-  <div class="logo">Quiz<span>Funnel</span></div>
-  <div class="card">
-    <div class="result-header">
-      <span class="result-emoji" id="result-emoji">🎉</span>
-      <div class="result-title" id="result-title">Quiz Complete!</div>
-      <div class="result-sub" id="result-sub">Here's how you did</div>
+  <div id="result" style="display:none;">
+    <h2 id="result-title"></h2>
+    <p id="result-sub"></p>
+
+    <!-- LOCK -->
+    <div id="lock">
+      <p>🔒 Full Analysis Locked</p>
+      <button class="btn" id="unlock">Unlock Results</button>
+      <button class="share" id="share">Share & Challenge</button>
     </div>
-    <div class="score-ring-wrap">
-      <a href="https://wringincriminate.com/k42m2hfvnc?key=03608ead3fdec14b4c04962bd4f3c1ed" target="_blank" rel="noopener" id="score-ring-link" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
-        <div class="score-ring">
-          <svg viewBox="0 0 100 100">
-            <circle class="track" cx="50" cy="50" r="45"/>
-            <circle class="fill" id="score-circle" cx="50" cy="50" r="45" style="stroke-dasharray:282;stroke-dashoffset:282;"/>
-          </svg>
-          <div class="score-overlay">
-            <div class="score-pct" id="score-pct">0%</div>
-            <div class="score-pct-lbl">Tap to reveal</div>
-          </div>
-        </div>
-        <div style="font-size:0.75rem;font-weight:500;color:var(--accent);letter-spacing:0.04em;">👆 Tap your score to see full results</div>
-      </a>
-    </div>
-    <div class="result-stats">
-      <div class="stat-box"><div class="stat-box-num c" id="res-correct">0</div><div class="stat-box-lbl">Correct</div></div>
-      <div class="stat-box"><div class="stat-box-num w" id="res-wrong">0</div><div class="stat-box-lbl">Wrong</div></div>
-      <div class="stat-box"><div class="stat-box-num s" id="res-score">0%</div><div class="stat-box-lbl">Final Score</div></div>
-    </div>
-    <div class="answers-list" id="answers-list"></div>
-    <button class="btn btn-accent" id="play-again-btn">
-      Play Again
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
-    </button>
+
+    <!-- REAL -->
+    <div id="final" style="display:none;"></div>
   </div>
 </div>
 
 <script>
-const TOTAL = 15;
-const TIME = 600;
-let questions = [], answers = {}, currentQ = 0, timerInterval = null, timeLeft = TIME;
+let questions = [];
+let current = 0;
+let score = 0;
 
-function decodeHTML(str) {
-  const t = document.createElement('textarea');
-  t.innerHTML = str;
-  return t.value;
+/* FETCH REAL QUESTIONS */
+async function loadQuiz(){
+  const res = await fetch("https://opentdb.com/api.php?amount=5&type=multiple");
+  const data = await res.json();
+  questions = data.results;
 }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  const el = document.getElementById(id);
-  el.classList.add('active');
-  void el.offsetWidth;
+document.getElementById("start").onclick = async ()=>{
+  document.getElementById("start").style.display="none";
+  await loadQuiz();
+  showQ();
+};
+
+function decode(str){
+  let txt = document.createElement("textarea");
+  txt.innerHTML = str;
+  return txt.value;
 }
 
-function formatTime(s) {
-  return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
-}
+function showQ(){
+  let q = questions[current];
+  document.getElementById("question").innerText = decode(q.question);
 
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer-display').textContent = formatTime(timeLeft);
-    document.getElementById('timer-wrap').classList.toggle('urgent', timeLeft <= 60);
-    if (timeLeft <= 0) { clearInterval(timerInterval); showResults(); }
-  }, 1000);
-}
+  let opts = [...q.incorrect_answers, q.correct_answer]
+    .sort(()=>Math.random()-0.5);
 
-async function fetchQuestions() {
-  showScreen('screen-loading');
-  try {
-    const res = await fetch('https://opentdb.com/api.php?amount=15&type=multiple');
-    const data = await res.json();
-    if (!data.results || !data.results.length) throw new Error();
-    questions = data.results.map(q => {
-      const opts = [...q.incorrect_answers.map(decodeHTML), decodeHTML(q.correct_answer)];
-      for (let i = opts.length-1; i > 0; i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [opts[i],opts[j]] = [opts[j],opts[i]];
-      }
-      return { question: decodeHTML(q.question), category: decodeHTML(q.category), correct: decodeHTML(q.correct_answer), options: opts };
-    });
-    answers = {}; currentQ = 0; timeLeft = TIME; adFired = false;
-    buildDots(); renderQuestion();
-    showScreen('screen-quiz');
-    startTimer();
-  } catch(e) {
-    alert('Failed to load questions. Check your connection and try again.');
-    showScreen('screen-start');
-  }
-}
+  let container = document.getElementById("options");
+  container.innerHTML="";
 
-function buildDots() {
-  const nav = document.getElementById('dot-nav');
-  nav.innerHTML = '';
-  for (let i = 0; i < TOTAL; i++) {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    d.addEventListener('click', () => { currentQ = i; renderQuestion(); });
-    nav.appendChild(d);
-  }
-}
+  opts.forEach(o=>{
+    let b = document.createElement("button");
+    b.innerText = decode(o);
 
-function updateDots() {
-  document.querySelectorAll('.dot').forEach((d, i) => {
-    d.classList.remove('answered','current');
-    if (i === currentQ) d.classList.add('current');
-    else if (answers[i] !== undefined) d.classList.add('answered');
+    b.onclick = ()=>{
+      if(o === q.correct_answer) score++;
+      current++;
+      if(current < questions.length) showQ();
+      else showResult();
+    };
+
+    container.appendChild(b);
   });
 }
 
-function renderQuestion() {
-  const q = questions[currentQ];
-  document.getElementById('q-current').textContent = currentQ + 1;
-  document.getElementById('q-category').textContent = q.category;
-  document.getElementById('q-text').textContent = q.question;
-  document.getElementById('progress-fill').style.width = `${((currentQ+1)/TOTAL)*100}%`;
+/* RESULT */
+function showResult(){
+  document.getElementById("options").style.display="none";
+  document.getElementById("question").style.display="none";
+  document.getElementById("result").style.display="block";
 
-  const container = document.getElementById('options');
-  container.innerHTML = '';
-  const selected = answers[currentQ];
-  const isAnswered = selected !== undefined;
+  let pct = Math.round((score / questions.length)*100);
 
-  q.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.textContent = opt;
-    if (isAnswered) {
-      btn.disabled = true;
-      if (opt === q.correct) btn.classList.add('correct');
-      else if (opt === selected) btn.classList.add('wrong');
-    } else {
-      btn.addEventListener('click', () => selectAnswer(opt));
-    }
-    container.appendChild(btn);
-  });
+  let rank = pct >= 80 ? "Top 10% 🏆"
+           : pct >= 60 ? "Top 30% 🔥"
+           : "Better than most 👍";
 
-  const prevBtn = document.getElementById('btn-prev');
-  prevBtn.style.opacity = currentQ === 0 ? '0.3' : '1';
-  prevBtn.disabled = currentQ === 0;
+  document.getElementById("result-title").innerText = rank;
+  document.getElementById("result-sub").innerText =
+    "Your brain score is ready… unlock to see full breakdown 👀";
 
-  const nextBtn = document.getElementById('btn-next');
-  nextBtn.innerHTML = currentQ === TOTAL-1
-    ? 'Finish <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
-    : 'Next <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-  updateDots();
+  document.getElementById("final").innerText =
+    "You scored " + pct + "% (" + score + "/" + questions.length + ")";
+
+  /* AUTO REDIRECT (BIG MONEY) */
+  setTimeout(()=>{
+    window.location.href="https://wringincriminate.com/k42m2hfvnc?key=03608ead3fdec14b4c04962bd4f3c1ed";
+  }, 9000);
 }
 
-function selectAnswer(opt) {
-  answers[currentQ] = opt;
-  renderQuestion();
-  if (currentQ < TOTAL-1) setTimeout(() => { currentQ++; renderQuestion(); }, 650);
-}
+/* UNLOCK */
+document.getElementById("unlock").onclick = ()=>{
+  window.open("https://wringincriminate.com/k42m2hfvnc?key=03608ead3fdec14b4c04962bd4f3c1ed","_blank");
 
-document.getElementById('btn-prev').addEventListener('click', () => { if (currentQ > 0) { currentQ--; renderQuestion(); } });
-document.getElementById('btn-next').addEventListener('click', () => { if (currentQ < TOTAL-1) { currentQ++; renderQuestion(); } else showResults(); });
+  setTimeout(()=>{
+    document.getElementById("lock").style.display="none";
+    document.getElementById("final").style.display="block";
+  },1000);
+};
 
-function showResults() {
-  clearInterval(timerInterval);
-
-  let correct = 0, wrong = 0;
-  questions.forEach((q, i) => {
-    if (answers[i] === q.correct) correct++;
-    else if (answers[i] !== undefined) wrong++;
-  });
-  const pct = Math.round((correct / TOTAL) * 100);
-
-  let emoji = '😔', title = 'Keep practicing!';
-  if (pct >= 90) { emoji = '🏆'; title = "Excellent! You're a genius!"; }
-  else if (pct >= 70) { emoji = '🎉'; title = 'Great job!'; }
-  else if (pct >= 50) { emoji = '👍'; title = 'Not bad at all!'; }
-  else if (pct >= 30) { emoji = '📚'; title = 'Room to improve!'; }
-
-  document.getElementById('result-emoji').textContent = emoji;
-  document.getElementById('result-title').textContent = title;
-  document.getElementById('result-sub').textContent = `${correct} correct out of ${TOTAL}`;
-  document.getElementById('res-correct').textContent = correct;
-  document.getElementById('res-wrong').textContent = wrong;
-  document.getElementById('res-score').textContent = pct + '%';
-  document.getElementById('score-pct').textContent = pct + '%';
-
-  const circumference = 282;
-  document.getElementById('score-circle').style.strokeDashoffset = circumference;
-  showScreen('screen-result');
-  setTimeout(() => {
-    document.getElementById('score-circle').style.strokeDashoffset = circumference - (pct/100)*circumference;
-  }, 120);
-
-  const list = document.getElementById('answers-list');
-  list.innerHTML = '';
-  questions.forEach((q, i) => {
-    const ua = answers[i];
-    const isCorrect = ua === q.correct;
-    const isSkipped = ua === undefined;
-    const item = document.createElement('div');
-    item.className = 'answer-item ' + (isSkipped ? 'skip-item' : isCorrect ? 'correct-item' : 'wrong-item');
-    item.innerHTML = `
-      <div class="answer-q">${i+1}. ${q.question}</div>
-      <div class="answer-detail">${
-        isSkipped ? `Skipped — <span class="answer-correct-lbl">Correct: ${q.correct}</span>`
-        : isCorrect ? `<span class="answer-correct-lbl">✓ ${ua}</span>`
-        : `<span class="answer-wrong-lbl">✗ ${ua}</span> · <span class="answer-correct-lbl">Correct: ${q.correct}</span>`
-      }</div>`;
-    list.appendChild(item);
-  });
-}
-
-document.getElementById('start-btn').addEventListener('click', () => {
-  fetchQuestions();
-});
-
-document.getElementById('play-again-btn').addEventListener('click', () => showScreen('screen-start'));
+/* SHARE */
+document.getElementById("share").onclick = ()=>{
+  let text = encodeURIComponent("I scored high on this IQ test 🤯 Can you beat me?");
+  let url = encodeURIComponent(window.location.href);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`);
+};
 </script>
+
+<!-- ADSTERRA SCRIPT -->
+<script src="https://wringincriminate.com/19/03/88/190388fcc4bc352f0c71ea04b90f6587.js"></script>
+
 </body>
 </html>
